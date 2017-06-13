@@ -39,6 +39,13 @@ public class HabitContract {
         // The priority of the habit
         public static final String COLUMN_PRIORITY = "priority";
 
+        // SQLite data types as constants to prevent typos
+        public static final String TYPE_TEXT = " TEXT";
+        public static final String TYPE_INTEGER = " INTEGER";
+        public static final String TYPE_DATETIME = " DATETIME";
+        public static final String NOT_NULL = " NOT NULL";
+        public static final String PRIMARY_KEY = " PRIMARY KEY AUTOINCREMENT";
+
         /**
          * Possible values for the priority field of the database.
          */

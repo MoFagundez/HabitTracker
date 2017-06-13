@@ -2,9 +2,11 @@ package com.mofagundez.habittracker;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.mofagundez.habittracker.data.HabitDbHelper;
 
@@ -27,17 +29,25 @@ public class MainActivity extends AppCompatActivity {
         mDbHelper = new HabitDbHelper(this);
 
         // Call method to insert dummy data into de database
-        insertData();
+        insertHabit();
 
         // Call method to read the previously inserted dummy data
-        readData();
+        // and return a Cursor object
+        Cursor cursor = readHabit();
+
+        // Log the Cursor object so we can see it's wworking fine :)
+        Log.i("CURSOR", DatabaseUtils.dumpCursorToString(cursor));
+
+        // Close the cursor when we're done with it to release memory and avoid leaks
+        cursor.close();
+
     }
 
     /**
      * DATA READING deliverable from the Project Rubric: single read method
      * that returns a Cursor object.
      */
-    private void readData() {
+    private Cursor readHabit() {
         // Create new or open already existent database
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -74,10 +84,11 @@ public class MainActivity extends AppCompatActivity {
                 int currentPriority = cursor.getInt(priorityColumnIndex);
                 String currentDate = cursor.getString(dateColumnIndex);
             }
-        } finally {
-            // Close the cursor when we're done with it to release memory and avoid leaks
-            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        // Return cursor
+        return cursor;
 
     }
 
@@ -85,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
      * DATA INSERTION deliverable from the Project Rubric: single insert method
      * that adds at least two values of two different datatypes into de database
      */
-    private void insertData() {
+    private void insertHabit() {
         // Create new or open already existent database
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -110,9 +121,8 @@ public class MainActivity extends AppCompatActivity {
     private String getDateTime() {
         // Define a date format of "yyyy-MM-dd HH:mm:ss" (i.e.: 2017-06-12 11:05:23) and get date & time from local device
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        Date date = new Date();
         // Return the formatted date
-        return dateFormat.format(date);
+        return dateFormat.format(new Date());
     }
 
 
